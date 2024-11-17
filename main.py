@@ -1,6 +1,8 @@
 
 from pad_solver.piece import Piece
 from pad_solver.puzzle_a_day_solver import PuzzleADaySolver
+import cProfile
+
 # 8 pieces, 43 cells
 # 43*8 pentominoes to check (without reflections)
 
@@ -16,24 +18,7 @@ p7 = Piece('h', [(0,0),(0,1),(1,1),(0,2),(0,3)],'⬜')
 available_pieces = [p0,p1,p2,p3,p4,p5,p6,p7]
 
 
-month = 'jan'
-day = '15'
+month = 'nov'
+day = '14'
 solver = PuzzleADaySolver(month=month, day=day, available_pieces=available_pieces)
-found, solution = solver.solve()
-if found:
-    print('FOUND')
-    print(solution)
-else:
-    print('not found')
-
-"""
-    board = get_pretty_board(month_idx=month_idx,day_idx=day_idx)
-
-    for r in rows:
-        for i,n in enumerate(matrix[r].nodes):
-            if n == 1:
-                x,y = i_to_p[i]
-                board[x][y] = matrix[r].emoji
-    for b in board:
-        print("".join(b),end='\n')
-"""
+solver.solve_and_pretty_print()

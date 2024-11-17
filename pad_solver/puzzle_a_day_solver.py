@@ -81,3 +81,21 @@ class PuzzleADaySolver:
         matrix = self.generate_rows(self.available_pieces)
         found, rows = self.dance_iterative(matrix=matrix,month_idx=self.calendar_board.month_idx,day_idx=self.calendar_board.day_idx)
         return found, rows
+    
+    def solve_and_pretty_print(self):
+        board = self.calendar_board.get_pretty_board()
+        matrix = self.generate_rows(self.available_pieces)
+        found, rows = self.dance_iterative(matrix=matrix,month_idx=self.calendar_board.month_idx,day_idx=self.calendar_board.day_idx)
+        if found:
+            print('*** SOLUTION ***')
+            for r in rows:
+                for i,n in enumerate(matrix[r].nodes):
+                    if n == 1:
+                        x,y = self.calendar_board.idx_to_point[i]
+                        board[x][y] = matrix[r].emoji
+            for b in board:
+                print("".join(b),end='\n')
+        else:
+            print('not found')
+
+        

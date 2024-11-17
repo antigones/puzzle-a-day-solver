@@ -128,7 +128,7 @@ class CalendarBoard:
         board[day_point_x][day_point_y] = '!'
         return board
 
-    def get_pretty_board(self, month_idx, day_idx):
+    def get_pretty_board(self):
         board = [
                 ['x','x','x','x','x','x','🔲'],
                 ['x','x','x','x','x','x','🔲'],
@@ -138,8 +138,8 @@ class CalendarBoard:
                 ['x','x','x','x','x','x','x'],
                 ['x','x','x','🔲','🔲','🔲','🔲'],
                 ]
-        month_point_x,month_point_y = self.idx_to_point[month_idx]
-        day_point_x,day_point_y = self.idx_to_point[day_idx]
+        month_point_x,month_point_y = self.idx_to_point[self.month_idx]
+        day_point_x,day_point_y = self.idx_to_point[self.day_idx]
         board[month_point_x][month_point_y] = '⭕'
         board[day_point_x][day_point_y] = '⭕'
         return board
