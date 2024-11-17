@@ -22,7 +22,7 @@ class PuzzleADaySolver:
                 for r in range(len(board)):
                     for c in range(len(board[0])):
                         variation_at_position = pu.traslate(variation,(r,c))
-                        if self.can_place(variation_at_position, board):
+                        if self.can_place(variation_at_position):
                             piece_variation_at_position = Piece(piece.name, variation_at_position, piece.emoji)
                             matrix.append(self.piece_to_idx(piece_variation_at_position))
         return matrix
@@ -41,8 +41,7 @@ class PuzzleADaySolver:
         r = Row(name=piece.name, nodes=row, emoji=piece.emoji)
         return r
     
-    def can_place(self, points, board):
-        #board = get_board(month_idx=month_idx,day_idx=day_idx)
+    def can_place(self, points):
         for point in points:
             x,y = point
             if x > len(self.board[0])-1 or y > len(self.board)-1 or y < 0 or x < 0 or self.board[x][y] != 'x':
@@ -59,15 +58,10 @@ class PuzzleADaySolver:
         while state:
             covered_cols, available_rows, chosen_rows = state.pop()
             
-            if len(covered_cols) == len(matrix[0].nodes) - 2 and month_idx not in covered_cols and day_idx not in covered_cols:
-                print('FOUND')
-                print(chosen_rows)
-                for r in chosen_rows:
-                    print(matrix[r].nodes, end='\n')
-                
+            if month_idx not in covered_cols and day_idx not in covered_cols and len(covered_cols) == len(matrix[0].nodes) - 2:
                 return True, chosen_rows
 
-            if len(available_rows) == 0:
+            if not available_rows:
                 continue
 
             for rd_row_idx in available_rows:
@@ -78,22 +72,12 @@ class PuzzleADaySolver:
                 new_available_rows = available_rows.copy()
                 new_available_rows.discard(rd_row_idx)
                 
-                for r in available_rows:
-                    row = matrix[r]
-                    if row == chosen_row:
-                        new_available_rows.discard(r)
-                
-                new_covered_cols = covered_cols.copy()
-                for i, elm in enumerate(chosen_row.nodes):
-                    if elm == 1:
-                        new_covered_cols.add(i)
+                new_available_rows = available_rows - {r for r in available_rows if matrix[r] == chosen_row}
+                new_covered_cols = covered_cols | {i for i, elm in enumerate(chosen_row.nodes) if elm == 1}
 
-                for r, row in enumerate(matrix):
-                    if r in new_available_rows:
-                        for i, elm in enumerate(row.nodes):
-                            if elm == 1 and i in new_covered_cols:
-                                new_available_rows.discard(r)
-                state.append((new_covered_cols, new_available_rows, chosen_rows.copy()))
+                new_available_rows -= {r for r, row in enumerate(matrix) if r in new_available_rows and any(elm == 1 and i in new_covered_cols for i, elm in enumerate(row.nodes))}
+                
+                state.append((new_covered_cols, new_available_rows, chosen_rows | {rd_row_idx}))
                 chosen_rows.remove(rd_row_idx)
         return False, None
     
