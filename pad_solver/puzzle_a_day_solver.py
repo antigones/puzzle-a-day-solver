@@ -70,7 +70,7 @@ class PuzzleADaySolver:
             if len(available_rows) == 0:
                 continue
 
-            for rd_row_idx in list(available_rows):
+            for rd_row_idx in available_rows:
                 # choose a row (place a piece on the board)
                 chosen_row = matrix[rd_row_idx]
                 chosen_rows.add(rd_row_idx)
@@ -78,7 +78,7 @@ class PuzzleADaySolver:
                 new_available_rows = available_rows.copy()
                 new_available_rows.discard(rd_row_idx)
                 
-                for r in list(available_rows):
+                for r in available_rows:
                     row = matrix[r]
                     if row == chosen_row:
                         new_available_rows.discard(r)

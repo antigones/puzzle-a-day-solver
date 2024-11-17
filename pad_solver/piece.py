@@ -8,9 +8,10 @@ class Piece:
         self.emoji = emoji
  
     def __eq__(self, other):
-        if isinstance(other, Piece):
+        try:
             return self.name == other.name
-        return False
+        except AttributeError:
+            return False
     
     def __hash__(self):
         return hash(self.name)
