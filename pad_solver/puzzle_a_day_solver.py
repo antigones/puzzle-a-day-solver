@@ -67,7 +67,6 @@ class PuzzleADaySolver:
             for rd_row_idx in available_rows:
                 # choose a row (place a piece on the board)
                 chosen_row = matrix[rd_row_idx]
-                chosen_rows.add(rd_row_idx)
                 
                 new_available_rows = available_rows.copy()
                 new_available_rows.discard(rd_row_idx)
@@ -78,7 +77,6 @@ class PuzzleADaySolver:
                 new_available_rows -= {r for r, row in enumerate(matrix) if r in new_available_rows and any(elm == 1 and i in new_covered_cols for i, elm in enumerate(row.nodes))}
                 
                 state.append((new_covered_cols, new_available_rows, chosen_rows | {rd_row_idx}))
-                chosen_rows.remove(rd_row_idx)
         return False, None
     
 
