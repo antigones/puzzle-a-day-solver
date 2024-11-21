@@ -6,12 +6,24 @@ from pad_solver.row import Row
 
 class PuzzleADaySolver:
 
-    def __init__(self, month, day, available_pieces):
+    p0 = Piece('a', [(0,0),(1,0),(0,1),(1,1),(0,2),(1,2)], '🟦')
+    p1 = Piece('b', [(0,0),(0,1),(0,2),(1,2),(1,3)],'🟪')
+    p2 = Piece('c', [(0,0),(1,0),(0,1),(1,1),(0,2)],'🟧')
+    p3 = Piece('d', [(0,0),(1,0),(0,1),(0,2),(1,2)],'🟩')
+    p4 = Piece('e', [(0,0),(0,1),(0,2),(0,3),(1,3)],'🟨')
+    p5 = Piece('f', [(0,0),(1,0),(2,0),(0,1),(0,2)],'🟫')
+    p6 = Piece('g', [(0,0),(0,1),(1,1),(2,1),(2,2)],'⬛')
+    p7 = Piece('h', [(0,0),(0,1),(1,1),(0,2),(0,3)],'⬜')
+
+    available_pieces = [p0,p1,p2,p3,p4,p5,p6,p7]
+
+
+    def __init__(self, month, day):
         self.month = month
         self.day = day
-        self.available_pieces = available_pieces
         self.calendar_board = CalendarBoard(month=month, day=day)
         self.board = self.calendar_board.board
+        self.nr_of_total_columns = 43
 
     def generate_rows(self, pieces:list[Piece]):
         matrix = list()
@@ -33,7 +45,8 @@ class PuzzleADaySolver:
             x,y = point
             col_idxs.append(self.calendar_board.point_to_idx[(x,y)])
         row = list()
-        for i in range(43):
+        
+        for i in range(self.nr_of_total_columns):
             if i in col_idxs:
                 row.append(1)
             else:
@@ -70,7 +83,8 @@ class PuzzleADaySolver:
                 
                 new_available_rows = available_rows - {rd_row_idx} - {r for r in available_rows if matrix[r] == chosen_row}
                 new_covered_cols = covered_cols | {i for i, elm in enumerate(chosen_row.nodes) if elm == 1}
-
+                #available_cols = set(range(self.nr_of_total_columns)).difference(covered_cols)
+                #new_covered_cols = covered_cols | {i for i in available_cols if chosen_row.nodes[i] == 1}
                 new_available_rows -= {r for r, row in enumerate(matrix) if r in new_available_rows and any(elm == 1 and i in new_covered_cols for i, elm in enumerate(row.nodes))}
                 
                 state.append((new_covered_cols, new_available_rows, chosen_rows | {rd_row_idx}))
